@@ -46,9 +46,9 @@ npm run dev     # 개발 서버 (/api → localhost:8080 프록시)
 npm test        # Vitest
 npm run build   # 타입체크 + 빌드
 
-# 운영용: 톰캣 9 에 올릴 war (application-local.yml 은 war 에 안 들어감 → 톰캣 실행 옵션으로 지정)
+# 운영용: 톰캣 9 에 올릴 war (송연처럼 application-local.yml 이 war 안에 들어감 → war 만 올리면 뜸. 2026-11-17 사용자 결정. git 에는 계속 안 올림)
 cd backend && mvn clean -DskipTests package   # target/mokyang-pop-backend.war (JDK 8 로 빌드 권장: JAVA_HOME=jdk1.8)
-#   톰캣: CATALINA_OPTS=-Dspring.config.additional-location=file:<경로>/application-local.yml
+#   서버에서 값을 바꿀 때만: CATALINA_OPTS=-Dspring.config.additional-location=file:<경로>/application-local.yml
 #   주소: http://서버:포트/mokyang-pop-backend/api/...  (Vercel 의 VITE_API_BASE_URL 도 이 주소까지)
 # 화면까지 war 에 넣을 때만: frontend 에서 npm run build 후 mvn clean -Pweb -DskipTests package
 # (clean 은 target/classes 를 지우므로 실행 중인 spring-boot:run 개발 서버는 다시 켤 것)

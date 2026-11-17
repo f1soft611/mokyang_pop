@@ -80,12 +80,11 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- 접속정보(application-local.yml)는 war 에 넣지 않는다. 서버에서는 따로 둔다(배포 안내 참고) -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<packagingExcludes>WEB-INF/classes/application-local.yml,WEB-INF/classes/application-local.yml.example</packagingExcludes>
+					<packagingExcludes>WEB-INF/classes/application-local.yml.example</packagingExcludes>
 				</configuration>
 			</plugin>
 			<plugin>
