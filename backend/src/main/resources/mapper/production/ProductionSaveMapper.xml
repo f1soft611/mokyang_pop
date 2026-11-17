@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mokyang.pop.production.ProductionSaveMapper">
+
+    <!-- 원본 ProductionModule.SaveProdData (SetDataWithReturn = ExecuteScalar) -->
+    <select id="prodIud" statementType="CALLABLE" resultType="map" flushCache="true" useCache="false">
+        {call SP_CPOP303_PROD_IUD(
+            #{r.factoryCode,jdbcType=VARCHAR}, #{r.prodPlanDate,jdbcType=VARCHAR}, #{r.prodPlanSeq,jdbcType=INTEGER},
+            #{r.prodSeq,jdbcType=INTEGER}, #{r.itemCode,jdbcType=VARCHAR}, #{r.workCode,jdbcType=VARCHAR},
+            #{r.equipSysCd,jdbcType=VARCHAR}, #{r.inputQty,jdbcType=DOUBLE}, #{r.goodQty,jdbcType=DOUBLE},
+            #{r.lossQty,jdbcType=DOUBLE}, #{r.restQty,jdbcType=DOUBLE}, #{r.changeQty,jdbcType=DOUBLE},
+            #{r.rcvQty,jdbcType=DOUBLE}, #{r.velocityQty,jdbcType=DOUBLE}, #{r.rollMaeQty,jdbcType=DOUBLE},
+            #{r.peUseQty,jdbcType=DOUBLE}, #{r.prodStime,jdbcType=VARCHAR}, #{r.prodEtime,jdbcType=VARCHAR},
+            #{r.workerCode,jdbcType=VARCHAR}, #{r.remark,jdbcType=VARCHAR}, #{r.itemUnwindCode,jdbcType=VARCHAR},
+            #{r.finishFlag,jdbcType=VARCHAR}, #{r.workCnt,jdbcType=INTEGER}, #{opman,jdbcType=VARCHAR},
+            #{r.iruReadyFlag,jdbcType=VARCHAR}, #{r.iru,jdbcType=VARCHAR})}
+    </select>
+
+    <!-- 원본 SaveMatData / DeleteMatData -->
+    <select id="materialIud" statementType="CALLABLE" resultType="map" flushCache="true" useCache="false">
+        {call SP_CPOP303_MATERIAL_IUD(
+            #{r.factoryCode,jdbcType=VARCHAR}, #{r.prodPlanDate,jdbcType=VARCHAR}, #{r.prodPlanSeq,jdbcType=INTEGER},
+            #{r.prodSeq,jdbcType=INTEGER}, #{r.matSeq,jdbcType=INTEGER}, #{r.materialCode,jdbcType=VARCHAR},
+            #{r.matLotNo,jdbcType=VARCHAR}, #{r.restQty,jdbcType=DOUBLE}, #{r.lossQty,jdbcType=DOUBLE},
+            #{r.inputQty,jdbcType=DOUBLE}, #{r.goodQty,jdbcType=DOUBLE}, #{r.ggFlag,jdbcType=VARCHAR},
+            #{r.matName,jdbcType=VARCHAR}, #{r.matSpec,jdbcType=VARCHAR}, #{r.matViewSeq,jdbcType=INTEGER},
+            #{r.warehouseCode,jdbcType=VARCHAR}, #{r.locationCode,jdbcType=VARCHAR}, #{r.iru,jdbcType=VARCHAR},
+            #{opman,jdbcType=VARCHAR})}
+    </select>
+
+    <!-- 원본 SaveWorkTime -->
+    <select id="worktimeIud" statementType="CALLABLE" resultType="map" flushCache="true" useCache="false">
+        {call SP_CPOP303_WORKTIME_IUD(
+            #{r.factoryCode,jdbcType=VARCHAR}, #{r.prodPlanDate,jdbcType=VARCHAR}, #{r.prodPlanSeq,jdbcType=INTEGER},
+            #{r.prodSeq,jdbcType=INTEGER}, #{r.timeSeq,jdbcType=INTEGER}, #{r.timeGbn,jdbcType=VARCHAR},
+            #{r.startTime,jdbcType=VARCHAR}, #{r.finishTime,jdbcType=VARCHAR}, #{r.stopCode,jdbcType=VARCHAR},
+            #{r.remark,jdbcType=VARCHAR}, #{opman,jdbcType=VARCHAR}, #{r.iru,jdbcType=VARCHAR})}
+    </select>
+
+</mapper>

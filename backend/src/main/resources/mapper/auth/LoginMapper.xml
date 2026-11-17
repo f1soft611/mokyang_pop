@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mokyang.pop.auth.LoginMapper">
+
+    <!-- 원본: EXEC SP_POP_LOGIN '{id}', '{pw}' (Module/LoginModule.cs) -->
+    <select id="login" statementType="CALLABLE" resultType="map">
+        {call SP_POP_LOGIN(#{userId,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR})}
+    </select>
+
+</mapper>

@@ -1,0 +1,16 @@
+/* 원본 iPlusPOP Assets/Fonts 의 Font Awesome 6 Free (Custom_FontStyle.xaml) */
+@font-face {
+  font-family: 'FA6Solid';
+  src: url('./fa-solid-900.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'FA6Regular';
+  src: url('./fa-regular-400.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}

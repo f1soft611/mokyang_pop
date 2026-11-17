@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mokyang.pop.production.ProdLotMapper">
+
+    <!-- 원본 GetFieldData -->
+    <select id="fields" statementType="CALLABLE" resultType="map" flushCache="true" useCache="false">
+        {call SP_CPOP303_PRODLOT_FIELD_LIST(#{factory,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, #{seq,jdbcType=VARCHAR},
+            #{prodSeq,jdbcType=VARCHAR})}
+    </select>
+
+    <!-- 원본 GetGridData -->
+    <select id="lots" statementType="CALLABLE" resultType="map" flushCache="true" useCache="false">
+        {call SP_CPOP303_PRODLOT_LIST(#{factory,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, #{seq,jdbcType=VARCHAR},
+            #{prodSeq,jdbcType=VARCHAR}, #{materialCode,jdbcType=VARCHAR})}
+    </select>
+
+    <!-- 원본 CreateLotBox / CreateLotRoll -->
+    <select id="newLots" statementType="CALLABLE" resultType="map" flushCache="true" useCache="false">
+        {call SP_CPOP303_NEW_PRODLOT_LIST(#{factory,jdbcType=VARCHAR}, #{materialCode,jdbcType=VARCHAR}, #{workCode,jdbcType=VARCHAR},
+            #{slitterQ,jdbcType=VARCHAR}, #{slitterH,jdbcType=VARCHAR}, #{boxM,jdbcType=VARCHAR}, #{workFinishFlag,jdbcType=VARCHAR})}
+    </select>
+
+    <!-- 원본 SaveLotData (SetDataWithReturn = ExecuteScalar) -->
+    <select id="lotIud" statementType="CALLABLE" resultType="map" flushCache="true" useCache="false">
+        {call SP_CPOP303_PRODLOT_IUD(
+            #{factory,jdbcType=VARCHAR}, #{r.systemLotNo,jdbcType=VARCHAR}, #{r.lotSeq,jdbcType=INTEGER},
+            #{r.prodPlanDate,jdbcType=VARCHAR}, #{r.prodPlanSeq,jdbcType=INTEGER}, #{r.prodSeq,jdbcType=INTEGER},
+            #{r.itemCode,jdbcType=VARCHAR}, #{r.workCode,jdbcType=VARCHAR}, #{r.prodDate,jdbcType=VARCHAR},
+            #{r.inputQty,jdbcType=DOUBLE}, #{r.goodQty,jdbcType=DOUBLE}, #{r.restFlag,jdbcType=VARCHAR},
+            #{opman,jdbcType=VARCHAR}, #{r.iru,jdbcType=VARCHAR})}
+    </select>
+
+    <!-- 원본 UpdateProdData (@IRU = IU 고정) -->
+    <select id="prodUpdate" statementType="CALLABLE" resultType="map" flushCache="true" useCache="false">
+        {call SP_CPOP303_PRODLOT_TPR601_IUD(
+            #{factory,jdbcType=VARCHAR}, #{r.prodPlanDate,jdbcType=VARCHAR}, #{r.prodPlanSeq,jdbcType=INTEGER},
+            #{r.prodSeq,jdbcType=INTEGER}, #{r.rollMaeQty,jdbcType=DOUBLE}, #{r.slitterH,jdbcType=DOUBLE},
+            #{r.boxQty,jdbcType=DOUBLE}, #{opman,jdbcType=VARCHAR}, 'IU')}
+    </select>
+
+</mapper>

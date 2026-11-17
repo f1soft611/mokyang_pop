@@ -1,0 +1,11 @@
+# 이 파일을 application-local.yml 로 복사해서 값을 채운다. application-local.yml 은 공유하지 않는다.
+# 실행: mvn spring-boot:run (프로필을 안 주면 local 을 씀)
+spring:
+  datasource:
+    url: jdbc:sqlserver://<서버>:1433;databaseName=iPlusERP_MOKYANG;encrypt=false
+    username: <계정>
+    password: <비밀번호>
+
+pop:
+  login:
+    master-password: <0000 계정 고정 비밀번호>

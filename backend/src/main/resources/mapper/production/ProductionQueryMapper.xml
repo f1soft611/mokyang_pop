@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mokyang.pop.production.ProductionQueryMapper">
+
+    <!-- 원본 Module/Combo/ComboModule.cs : WorkCode -->
+    <select id="works" resultType="map">
+        SELECT WORK_CODE AS CODE_ID2, WORK_NAME AS CODE_NAME_FULL, ROW_NUMBER() OVER (PARTITION BY FACTORY_CODE ORDER BY WORK_CODE) AS VIEW_SEQ
+          FROM TPR102
+         WHERE USE_FLAG = '1' AND ISNULL(DELETE_FLAG, '0') = '0' AND ISNULL(OUTORDER_FLAG, '0') = '0'
+         ORDER BY VIEW_SEQ
+    </select>
+
+    <!-- 원본 ComboModule.cs : WorkCenter (FACTORY_CODE '000001' 하드코딩 그대로) -->
+    <select id="workCenters" resultType="map">
+        SELECT A.WORKCENTER_CODE AS CODE_ID2, MAX(B.WORKCENTER_NAME) AS CODE_NAME_FULL, ROW_NUMBER() OVER (ORDER BY A.WORKCENTER_CODE) AS VIEW_SEQ
+          FROM TPR102R AS A
+          LEFT JOIN TPR101 AS B ON A.FACTORY_CODE = B.FACTORY_CODE AND A.WORKCENTER_CODE = B.WORKCENTER_CODE
+         WHERE A.FACTORY_CODE = '000001' AND A.WORK_CODE = #{workCode,jdbcType=VARCHAR}
+         GROUP BY A.WORKCENTER_CODE
+         ORDER BY VIEW_SEQ
+    </select>
+
+    <!-- 원본 ComboModule.cs : Get_WorkUnWind -->
+    <select id="unwinds" resultType="map">
+        SELECT CODE_NAME_FULL, CODE_ID2, ROW_NUMBER() OVER (PARTITION BY CODE_ID1 ORDER BY CODE_ID2) AS VIEW_SEQ
+          FROM TCO101
+         WHERE ISNULL(DELETE_FLAG, '0') = '0'
+           AND CODE_ID1 = '157'
+         ORDER BY VIEW_SEQ
+    </select>
+
+    <!-- 원본 ProductionModule.GetOrderNoByLot -->
+    <select id="orderNoByLot" resultType="map">
+        SELECT B.ORDER_NO
+          FROM TPR601LOT AS A,
+               TPR301R AS B
+         WHERE A.FACTORY_CODE = B.FACTORY_CODE
+           AND A.PRODPLAN_DATE = B.PRODPLAN_DATE
+           AND A.PRODPLAN_SEQ = B.PRODPLAN_SEQ
+           AND (A.SYSTEM_LOT_NO = #{keyword,jdbcType=VARCHAR} OR B.ORDER_NO = #{keyword,jdbcType=VARCHAR})
+         GROUP BY B.ORDER_NO
+    </select>
+
+    <select id="prodPlans" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP303_PRODPLAN_LIST(
+            #{factoryCode,jdbcType=VARCHAR}, #{workCode,jdbcType=VARCHAR}, #{workCenterCode,jdbcType=VARCHAR},
+            #{prodDate,jdbcType=VARCHAR}, #{wholeFlag,jdbcType=VARCHAR}, #{itemName,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR})}
+    </select>
+
+    <select id="prods" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP303_PROD_LIST(
+            #{factoryCode,jdbcType=VARCHAR}, #{prodPlanDate,jdbcType=VARCHAR}, #{prodPlanSeq,jdbcType=INTEGER}, #{prodSeq,jdbcType=INTEGER})}
+    </select>
+
+    <select id="materials" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP303_MATERIAL_LIST(
+            #{factoryCode,jdbcType=VARCHAR}, #{prodPlanDate,jdbcType=VARCHAR}, #{prodPlanSeq,jdbcType=INTEGER},
+            #{prodSeq,jdbcType=INTEGER}, #{workCode,jdbcType=VARCHAR})}
+    </select>
+
+    <select id="workTimes" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP303_WORKTIME_LIST(
+            #{factoryCode,jdbcType=VARCHAR}, #{prodPlanDate,jdbcType=VARCHAR}, #{prodPlanSeq,jdbcType=INTEGER})}
+    </select>
+
+    <!-- 원본 ComboModule.Get_EquipSysCd2 -->
+    <select id="equipments" resultType="map">
+        SELECT EQUIP_KIND AS CODE_ID1, EQUIP_SYS_CD AS CODE_ID2, EQUIP_NM AS CODE_NAME_FULL, ROW_NUMBER() OVER (PARTITION BY EQUIP_CD ORDER BY EQUIP_CD) AS VIEW_SEQ
+          FROM TPR151
+         WHERE ISNULL(USE_FLAG, '0') = '1' AND PROD_DEPT = #{workCenterCode,jdbcType=VARCHAR}
+         ORDER BY VIEW_SEQ
+    </select>
+
+    <select id="workers" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP_WORKER_LIST(#{factoryCode,jdbcType=VARCHAR}, #{workCode,jdbcType=VARCHAR}, #{workCenterCode,jdbcType=VARCHAR})}
+    </select>
+
+    <select id="barcode" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP303_BARCODE_LIST(
+            #{factoryCode,jdbcType=VARCHAR}, #{lotNo,jdbcType=VARCHAR}, #{prodPlanDate,jdbcType=VARCHAR},
+            #{prodPlanSeq,jdbcType=INTEGER}, #{workCode,jdbcType=VARCHAR})}
+    </select>
+
+    <select id="conversionQty" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP303_CONVERSION_QTY(
+            #{itemCode,jdbcType=VARCHAR}, #{goodQty,jdbcType=DOUBLE}, #{boxMaeQty,jdbcType=DOUBLE}, #{boxMaeFlag,jdbcType=VARCHAR})}
+    </select>
+
+    <select id="workProdPlans" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP303_WORK_PRODPLAN_LIST(
+            #{factoryCode,jdbcType=VARCHAR}, #{workCode,jdbcType=VARCHAR}, #{workCenterCode,jdbcType=VARCHAR},
+            #{dateFrom,jdbcType=VARCHAR}, #{dateTo,jdbcType=VARCHAR})}
+    </select>
+
+    <select id="workDaily" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP303_WORK_DAILY_LIST(
+            #{factoryCode,jdbcType=VARCHAR}, #{workCode,jdbcType=VARCHAR}, #{workCenterCode,jdbcType=VARCHAR},
+            #{date,jdbcType=VARCHAR})}
+    </select>
+
+</mapper>

@@ -1,0 +1,14 @@
+# 공통
+node_modules/
+dist/
+target/
+logs/
+*.log
+.vscode/
+.idea/
+
+# DB 접속정보 (공유 금지)
+backend/src/main/resources/application-local.yml
+
+# VS Code 확장(자바 업그레이드 도구)이 만든 파일
+.github/modernize/

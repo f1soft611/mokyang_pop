@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mokyang.pop.production.StockQueryMapper">
+
+    <!-- 원본 StockModule.GetDefaultInfo -->
+    <select id="defaultInfo" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP_MATERIAL_STOCK_SEARCH_INFO(
+            #{factoryCode,jdbcType=VARCHAR}, #{prodPlanDate,jdbcType=VARCHAR}, #{prodPlanSeq,jdbcType=INTEGER}, #{ggFlag,jdbcType=VARCHAR})}
+    </select>
+
+    <!-- 원본 ComboModule.Get_ItemKind2 (자재구분) -->
+    <select id="itemKind2" resultType="map">
+        SELECT ITEM_KIND2 AS CODE, ITEM_KIND_NAME2 AS NAME
+          FROM TCO107
+         WHERE ISNULL(DELETE_FLAG, '0') = '0'
+           AND ITEM_GBN = 'B'
+           AND ITEM_KIND1 = '001'
+         ORDER BY ITEM_KIND2
+    </select>
+
+    <!-- 원본 ComboModule.Get_ItemKind3 (자재분류) -->
+    <select id="itemKind3" resultType="map">
+        SELECT ITEM_KIND3 AS CODE, ITEM_KIND_NAME3 AS NAME
+          FROM TCO108
+         WHERE ISNULL(DELETE_FLAG, '0') = '0'
+           AND ITEM_GBN = 'B'
+           AND ITEM_KIND1 = '001'
+           AND ITEM_KIND2 = #{itemKind2}
+         ORDER BY ITEM_KIND3
+    </select>
+
+    <!-- 원본 StockModule.GetMainList -->
+    <select id="stockList" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP_MATERIAL_STOCK_LIST_DEV(
+            #{materialCode,jdbcType=VARCHAR}, #{itemKind2,jdbcType=VARCHAR}, #{itemKind3,jdbcType=VARCHAR},
+            #{widthFrom,jdbcType=VARCHAR}, #{widthTo,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR},
+            #{workCode,jdbcType=VARCHAR}, #{workSeq,jdbcType=VARCHAR}, #{ggFlag,jdbcType=VARCHAR})}
+    </select>
+
+</mapper>
