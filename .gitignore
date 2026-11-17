@@ -12,3 +12,6 @@ backend/src/main/resources/application-local.yml
 
 # VS Code 확장(자바 업그레이드 도구)이 만든 파일
 .github/modernize/
+
+# 자동 시험 코드는 git 에 올리지 않음(2026-11-17 사용자 결정, 이 PC 에만 둠)
+backend/src/test/
