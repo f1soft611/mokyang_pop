@@ -1,7 +1,10 @@
 import { formatN0 } from '../../../shared/dialog/padInput';
+import { floatArg, ParseError, parseFloat32, parseInt32 } from '../../../shared/dotnet/dotnetNumber';
 import { text } from './mappers';
 import type { Row } from './types';
 import { formatSingleN0 } from './workProdPlan';
+
+export { floatArg };
 
 /** 원본 ProdLotModule 의 Field_* / Search_material_code */
 export type LotFields = {
@@ -51,25 +54,6 @@ export type LotRow = {
 
 /** SP_CPOP303_NEW_PRODLOT_LIST 첫 행 */
 export type NewLotInfo = { total: number; maxLotNo: number; prefix: string } | null;
-
-class ParseError extends Error {}
-
-/** 원본 int.Parse(x.ToString()): null·빈 값·정수 아님 → 예외 */
-function parseInt32(v: unknown): number {
-  if (v === null || v === undefined || v === '') throw new ParseError();
-  const s = String(v).trim();
-  const n = typeof v === 'number' ? v : /^[+-]?\d+$/.test(s) ? Number(s) : NaN;
-  if (!Number.isInteger(n)) throw new ParseError();
-  return n;
-}
-
-/** 원본 float.Parse(x.ToString()) */
-function parseFloat32(v: unknown): number {
-  if (v === null || v === undefined || v === '') throw new ParseError();
-  const n = typeof v === 'number' ? v : Number(String(v).trim());
-  if (!Number.isFinite(n)) throw new ParseError();
-  return Math.fround(n);
-}
 
 /** 원본 GetFieldData: 첫 행을 순서대로 대입, 파싱 예외가 나면 그 칸부터 뒤는 이전 값(예외를 삼킴) */
 export function applyLotFields(prev: LotFields, rows: Row[]): LotFields {
@@ -217,11 +201,6 @@ export function lotGoodQty(workCode: string, f: LotFields): number {
 export function setHeaderCheck(rows: LotRow[], tag: 'Ji' | 'Out' | 'Box', checked: boolean): LotRow[] {
   const key = tag === 'Ji' ? 'printFlagJi' : tag === 'Out' ? 'printFlagOut' : 'printFlag';
   return rows.map((r) => (r.isPrintEnabled ? { ...r, [key]: checked } : r));
-}
-
-/** .NET float.ToString() (유효숫자 7자리) — 문자열 EXEC 인자. 지수 표기는 쓰지 않는다 */
-export function floatArg(v: number): string {
-  return String(Number(Math.fround(v).toPrecision(7)));
 }
 
 const unN0 = (s: string) => Number(s.replace(/,/g, ''));

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mokyang.pop.shipping.ShippingMapper">
+
+    <select id="list" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP301_01_LIST2(
+            #{factoryCode,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, #{materialName,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})}
+    </select>
+
+    <!-- 원본 ComboModule.Get_OrderGbn("520") -->
+    <select id="orderGbn" resultType="map">
+        SELECT CODE_ID2 AS CODE, CODE_NAME_FULL AS NAME
+          FROM TCO101
+         WHERE CODE_ID1 = '520'
+           AND ISNULL(DELETE_FLAG, '0') &lt;&gt; '1'
+         ORDER BY VIEW_SEQ
+    </select>
+
+    <select id="lotList" statementType="CALLABLE" resultType="map">
+        {call SP_CPOP301_WIN02_01_LIST(
+            #{factoryCode,jdbcType=VARCHAR}, #{materialCode,jdbcType=VARCHAR}, #{shipplanSeq,jdbcType=VARCHAR},
+            #{lotNo,jdbcType=VARCHAR}, #{qty,jdbcType=VARCHAR})}
+    </select>
+
+</mapper>

@@ -29,15 +29,17 @@ const headerIconSx = {
 
 type Props = {
   onOpenProduction: () => void;
+  onOpenShipping: () => void;
   onLogout: () => void;
 };
 
-export default function MainMenuPage({ onOpenProduction, onLogout }: Props) {
+export default function MainMenuPage({ onOpenProduction, onOpenShipping, onLogout }: Props) {
   const dialog = useDialog();
 
   const handleClick = (key: MenuCard['key']) => {
     if (key === 'production') onOpenProduction();
-    // 출하/자재입고/재고실사는 이번 범위가 아님 (보이되 반응 없음)
+    else if (key === 'shipping') onOpenShipping();
+    // 자재입고/재고실사는 이번 범위가 아님
   };
 
   // 원본 ClickLogOut: 확인 → MY_INFO=null, cache.Reset(factory_code) → 로그인

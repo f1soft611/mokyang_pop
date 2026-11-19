@@ -28,13 +28,14 @@ import MainMenuPage from './MainMenuPage';
 
 function renderPage() {
   const onOpenProduction = vi.fn();
+  const onOpenShipping = vi.fn();
   const onLogout = vi.fn();
   render(
     <DialogProvider>
-      <MainMenuPage onOpenProduction={onOpenProduction} onLogout={onLogout} />
+      <MainMenuPage onOpenProduction={onOpenProduction} onOpenShipping={onOpenShipping} onLogout={onLogout} />
     </DialogProvider>,
   );
-  return { onOpenProduction, onLogout };
+  return { onOpenProduction, onOpenShipping, onLogout };
 }
 
 beforeEach(() => {
@@ -85,14 +86,17 @@ describe('MainMenuPage', () => {
     expect(onOpenProduction).toHaveBeenCalled();
   });
 
-  it('출하/자재입고/재고실사 카드는 눌러도 아무 일 없음', async () => {
-    const { onOpenProduction, onLogout } = renderPage();
-    for (const name of [/출하/, /자재입고/, /재고실사/]) {
-      await userEvent.click(screen.getByRole('button', { name }));
-    }
+  it('출하관리 카드 → onOpenShipping', async () => {
+    const { onOpenShipping, onOpenProduction } = renderPage();
+    await userEvent.click(screen.getByRole('button', { name: /출하/ }));
+    expect(onOpenShipping).toHaveBeenCalledTimes(1);
     expect(onOpenProduction).not.toHaveBeenCalled();
-    expect(onLogout).not.toHaveBeenCalled();
-    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+  });
+
+  it('자재입고/재고실사 카드는 이번 범위가 아니라 화면에 없다(누를 수 없음)', () => {
+    renderPage();
+    expect(screen.queryByRole('button', { name: /자재입고/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /재고실사/ })).not.toBeInTheDocument();
   });
 
   it('최소화 → desktop.minimize()', async () => {

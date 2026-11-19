@@ -5,9 +5,10 @@ import { onUnauthorized, setAuthToken } from '../shared/api/client';
 import LoginPage from '../pages/login/LoginPage';
 import MainMenuPage from '../pages/main-menu/MainMenuPage';
 import ProductionPage from '../pages/production/ProductionPage';
+import ShippingPage from '../pages/shipping/ShippingPage';
 import { SessionContext, type Session } from './session';
 
-type Screen = 'login' | 'mainMenu' | 'production';
+type Screen = 'login' | 'mainMenu' | 'production' | 'shipping';
 
 const EXPIRED_MESSAGE = '로그인 정보가 만료되었습니다. 다시 로그인하세요.';
 
@@ -42,8 +43,11 @@ function Screens() {
           }}
         />
       )}
-      {screen === 'mainMenu' && <MainMenuPage onOpenProduction={() => setScreen('production')} onLogout={toLogin} />}
+      {screen === 'mainMenu' && (
+        <MainMenuPage onOpenProduction={() => setScreen('production')} onOpenShipping={() => setScreen('shipping')} onLogout={toLogin} />
+      )}
       {screen === 'production' && <ProductionPage onClose={() => setScreen('mainMenu')} />}
+      {screen === 'shipping' && <ShippingPage onClose={() => setScreen('mainMenu')} />}
     </SessionContext.Provider>
   );
 }
